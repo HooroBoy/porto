@@ -1,0 +1,65 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  tags: string[]; // Menegaskan bahwa ini adalah array
+  slug: string;
+}
+
+const { title, description, tags = [], slug } = Astro.props; 
+// tags = [] adalah default value agar tidak error jika datanya kosong
+---
+
+<div class="tags">
+  {tags?.map((tag) => (
+    <span class="tag-item">#{tag}</span>
+  ))}
+</div>
+
+<div class="card">
+  <h3>{title}</h3>
+  <p>{description}</p>
+  <div class="tags">
+    {tags.map((tag) => <span>#{tag} </span>)}
+  </div>
+  <a href={`/projects/${slug}`}>Lihat Detail</a>
+</div>
+
+<style>
+  .card {
+    background: white;
+    border: 1px solid #e1e1e1;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #3b82f6; /* Warna biru saat di-hover */
+  }
+
+  h3 { margin-top: 0; color: #1a1a1a; }
+  p { color: #4b5563; flex-grow: 1; }
+  
+  .tags { margin-bottom: 1rem; }
+  .tag {
+    font-size: 0.75rem;
+    background: #f3f4f6;
+    color: #374151;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    margin-right: 0.5rem;
+  }
+
+  .link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 600;
+  }
+</style>

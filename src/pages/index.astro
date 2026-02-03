@@ -1,17 +1,37 @@
 ---
+import { getCollection } from "astro:content";
+import MainLayout from "../layouts/MainLayout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
 
+// Ambil semua data proyek dan urutkan berdasarkan tanggal terbaru
+const allProjects = await getCollection("projects");
+console.log("Jumlah proyek ditemukan:", allProjects.length); // Cek di terminal/CMD
+const sortedProjects = allProjects.sort((a, b) => {
+  // Mengonversi ke number untuk perbandingan yang aman
+  return b.data.publishDate.getTime() - a.data.publishDate.getTime();
+});
 ---
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<style>
+  .grid {
+    display: grid;
+    /* Membuat kolom otomatis yang responsif */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+</style>
+<MainLayout title="Arucaden Portfolio">
+  <h1>Halo, saya Arucaden1!</h1>
+  <section class="grid">
+    {
+      sortedProjects.map((project) => (
+        <ProjectCard
+          title={project.data.title}
+          description={project.data.description}
+          tags={project.data.tags}
+          slug={project.slug}
+        />
+      ))
+    }
+  </section>
+</MainLayout>
