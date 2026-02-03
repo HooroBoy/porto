@@ -1,7 +1,116 @@
-<html>
+---
+const { title } = Astro.props;
+const today = new Date().toLocaleDateString("en-GB"); // Format DD/MM/YYYY
+---
+
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <title>{title}</title>
+    <style>
+      :root {
+        --neon-red: #ff003c;
+        --dark-bg: #0a0a0a;
+      }
+
+      body {
+        background-color: var(--dark-bg);
+        color: white;
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        background: rgba(20, 20, 20, 0.95);
+        border-bottom: 2px solid var(--neon-red);
+        box-shadow: 0 0 15px rgba(255, 0, 60, 0.4);
+        padding: 0 2rem;
+        height: 60px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .home-logo {
+        color: var(--neon-red);
+        text-decoration: none;
+        font-size: 1.5rem;
+        margin-right: 2rem;
+        transition: all 0.3s ease;
+        text-shadow: 0 0 5px var(--neon-red);
+      }
+
+      .home-logo:hover {
+        color: white;
+        text-shadow: 0 0 10px var(--neon-red), 0 0 20px var(--neon-red);
+        transform: scale(1.1);
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+
+      .nav-links li {
+        height: 100%;
+        display: flex;
+        align-items: center;
+      }
+
+      .nav-links a {
+        color: var(--neon-red);
+        text-decoration: none;
+        padding: 0 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        text-shadow: 0 0 5px var(--neon-red);
+      }
+
+.nav-links a:hover {
+        /* Hapus background rgba agar kotak cahaya hilang */
+        background: transparent; 
+        
+        /* Fokus pada kilauan teks */
+        color: white;
+        text-shadow:
+          0 0 10px var(--neon-red),
+          0 0 20px var(--neon-red),
+          0 0 30px var(--neon-red); /* Menambah layer glow agar lebih berkilau */
+        
+        transform: translateY(-2px); /* Sedikit efek angkat agar lebih dinamis */
+      }
+
+      .date-display {
+        margin-left: auto;
+        color: white;
+        font-weight: bold;
+        letter-spacing: 1px;
+      }
+
+      main {
+        padding: 0;
+      }
+    </style>
+  </head>
   <body>
-    <nav>Navigasi Arucaden</nav>
+    <nav>
+      <a href="/" class="home-logo" title="Home">🏠</a>
+      <ul class="nav-links">
+        <li><a href="/">Profile</a></li>
+        <li><a href="/artworks">Artworks</a></li>
+        <li><a href="/projects">Projects</a></li>
+      </ul>
+      <div class="date-display">{today}</div>
+    </nav>
     <main>
-      <slot /> </main>
+      <slot />
+    </main>
   </body>
 </html>

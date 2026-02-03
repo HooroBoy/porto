@@ -2,36 +2,92 @@
 import { getCollection } from "astro:content";
 import MainLayout from "../layouts/MainLayout.astro";
 import ProjectCard from "../components/ProjectCard.astro";
+import HeroImage from "../assets/horoboy-hero.png";
 
-// Ambil semua data proyek dan urutkan berdasarkan tanggal terbaru
 const allProjects = await getCollection("projects");
-console.log("Jumlah proyek ditemukan:", allProjects.length); // Cek di terminal/CMD
 const sortedProjects = allProjects.sort((a, b) => {
-  // Mengonversi ke number untuk perbandingan yang aman
   return b.data.publishDate.getTime() - a.data.publishDate.getTime();
 });
 ---
-<style>
-  .grid {
-    display: grid;
-    /* Membuat kolom otomatis yang responsif */
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    padding: 1rem;
-  }
-</style>
-<MainLayout title="Arucaden Portfolio">
-  <h1>Halo, saya Arucaden1!</h1>
-  <section class="grid">
-    {
-      sortedProjects.map((project) => (
-        <ProjectCard
-          title={project.data.title}
-          description={project.data.description}
-          tags={project.data.tags}
-          slug={project.slug}
-        />
-      ))
-    }
+
+<MainLayout title="Horoboy Portfolio">
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="neon-text">HOROBOY</h1>
+      <div class="hero-tags">
+        <span class="tag">Web Dev</span>
+        <span class="tag">Pixel Art</span>
+        <span class="tag">Game Dev</span>
+      </div>
+    </div>
   </section>
 </MainLayout>
+
+<style define:vars={{ heroImage: `url(${HeroImage.src})` }}>
+  /* Menghilangkan sela hitam di pinggir layar */
+  .hero {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* Memastikan tidak ada bagian gambar yang bocor keluar */
+ /* Jika navbarmu tingginya 60px, ini akan menarik hero ke atas agar full */
+    
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: var(--heroImage);
+    /* Gunakan cover agar proporsional, atau 100% 100% jika ingin paksa penuh */
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Penting untuk Pixel Art */
+    image-rendering: pixelated; 
+    
+    /* Filter untuk mempercantik */
+    filter: brightness(0.6) blur(0.5rem); 
+    z-index: -1;
+  }
+
+  .hero-content {
+    text-align: center;
+    z-index: 1;
+  }
+
+  .neon-text {
+    font-size: clamp(5rem, 5vw, 5rem); /* Ukuran dinamis untuk HP Infinix-mu */
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 900;
+    text-shadow: 
+      0 0 10px #ff003c, 
+      0 0 20px #ff003c, 
+      0 0 40px #ff003c;
+    margin: 0;
+  }
+
+  .hero-tags {
+    margin-top: 1rem;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    margin: 0.5rem;
+    border-radius: 50px;
+    font-weight: bold;
+    border: 2px solid #ff003c;
+    background: rgba(0, 0, 0, 0.6); /* Background gelap agar teks putih terbaca */
+    color: #fff;
+    box-shadow: 0 0 10px rgba(255, 0, 60, 0.3);
+  }
+</style>
