@@ -8,9 +8,11 @@ const allProjects = await getCollection("projects");
 const sortedProjects = allProjects.sort((a, b) => {
   return b.data.publishDate.getTime() - a.data.publishDate.getTime();
 });
+
+const today = new Date().toLocaleDateString("en-GB");
 ---
 
-<MainLayout title="Horoboy Portfolio">
+<MainLayout title="Horoboy Portfolio" isHome={true}>
   <section class="hero">
     <div class="hero-content">
       <h1 class="neon-text">HOROBOY</h1>
@@ -20,74 +22,217 @@ const sortedProjects = allProjects.sort((a, b) => {
         <span class="tag">Game Dev</span>
       </div>
     </div>
+
+    <div id="nav-sentinel"></div>
+  </section>
+
+  <nav id="main-nav" class="sticky-nav">
+    <ul class="nav-links">
+      <li><a href="/">Profile</a></li>
+      <li><a href="/artworks">Artworks</a></li>
+      <li><a href="/projects">Projects</a></li>
+    </ul>
+    <div class="date-display">{today}</div>
+  </nav>
+
+  <section class="grid-container">
+    <div class="grid">
+      {
+        sortedProjects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            tags={project.data.tags}
+            slug={project.slug}
+          />
+        ))
+      }
+    </div>
   </section>
 </MainLayout>
 
+<script>
+  // Ambil elemen
+  const nav = document.getElementById('main-nav');
+  const sentinel = document.getElementById('nav-sentinel');
+
+  // Pastikan KEDUANYA ada sebelum menjalankan logika (Guard Clause)
+  if (nav && sentinel) {
+    const observer = new IntersectionObserver((entries) => {
+      // entries[0] adalah si sentinel (garis tipis)
+      if (!entries[0].isIntersecting) {
+        // Jika sentinel hilang (scroll ke bawah), aktifkan navbar
+        nav.classList.add('active');
+      } else {
+        // Jika sentinel terlihat (di atas), matikan navbar
+        nav.classList.remove('active');
+      }
+    });
+
+    // Mulai observasi
+    observer.observe(sentinel);
+  }
+</script>
+
 <style define:vars={{ heroImage: `url(${HeroImage.src})` }}>
-  /* Menghilangkan sela hitam di pinggir layar */
+  /* --- HERO (Tetap sama) --- */
   .hero {
     position: relative;
-    width: 100%;
-    min-height: 100vh;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden; /* Memastikan tidak ada bagian gambar yang bocor keluar */
- /* Jika navbarmu tingginya 60px, ini akan menarik hero ke atas agar full */
-    
+    margin-left: calc(-50vw + 50%);
+    overflow: hidden;
   }
 
+  /* ... (Kode CSS Hero::before dan text kamu yang lama tetap di sini) ... */
   .hero::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100%;
     background-image: var(--heroImage);
-    /* Gunakan cover agar proporsional, atau 100% 100% jika ingin paksa penuh */
-    background-size: cover; 
+    background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    
-    /* Penting untuk Pixel Art */
-    image-rendering: pixelated; 
-    
-    /* Filter untuk mempercantik */
-    filter: brightness(0.6) blur(0.5rem); 
+    image-rendering: pixelated;
+    filter: brightness(0.6), blur(0.5rem);
     z-index: -1;
   }
-
   .hero-content {
     text-align: center;
     z-index: 1;
   }
-
   .neon-text {
-    font-size: clamp(5rem, 5vw, 5rem); /* Ukuran dinamis untuk HP Infinix-mu */
+    font-size: 5rem;
     color: #fff;
     text-transform: uppercase;
     font-weight: 900;
-    text-shadow: 
-      0 0 10px #ff003c, 
-      0 0 20px #ff003c, 
+    margin: 0;
+    text-shadow:
+      0 0 10px #ff003c,
+      0 0 20px #ff003c,
       0 0 40px #ff003c;
+  }
+  .hero-tags .tag {
+    display: inline-block;
+    margin: 10px;
+    padding: 5px 15px;
+    border: 1px solid #ff003c;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+  }
+  @media (max-width: 768px) {
+    .neon-text {
+      font-size: 3rem;
+    }
+  }
+
+  /* --- LOGIKA BARU UNTUK NAVBAR --- */
+
+  /* 1. Posisi Sentinel (Penting!) */
+  #nav-sentinel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px; /* Sangat tipis, tak terlihat */
+    background: transparent;
+    pointer-events: none;
+  }
+
+  /* 2. Tampilan Awal Navbar (Sebelum Sticky) */
+  .sticky-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 60px;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    padding: 0 2rem;
+    box-sizing: border-box;
+
+    /* AWAL: Transparan & Tanpa Border */
+    background: rgba(
+      10,
+      10,
+      10,
+      0
+    ); /* Transparan penuh agar menyatu dengan hero */
+    border-bottom: 0px solid transparent; /* Border Hilang */
+    backdrop-filter: blur(0px); /* Blur mati dulu */
+    box-shadow: none;
+
+    /* Transisi halus saat berubah */
+    transition: all 0.4s ease-in-out;
+  }
+
+  /* 3. Tampilan Navbar SAAT STICKY (Class .active ditambahkan oleh JS) */
+  .sticky-nav.active {
+    background: rgba(10, 10, 10, 0.9); /* Jadi gelap */
+    backdrop-filter: blur(10px); /* Kaca aktif */
+
+    /* MUNCULKAN GARIS MERAH */
+    border-bottom: 2px solid #ff003c;
+    box-shadow: 0 5px 20px rgba(255, 0, 60, 0.2);
+  }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    padding: 0;
     margin: 0;
   }
-
-  .hero-tags {
-    margin-top: 1rem;
+  .nav-links a {
+    color: #ff003c;
+    text-decoration: none;
+    padding: 0 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px #ff003c;
+  }
+  .nav-links a:hover {
+    color: white;
+    background: transparent;
+    transform: translateY(-2px);
+    text-shadow:
+      0 0 10px #ff003c,
+      0 0 20px #ff003c;
+  }
+  .date-display {
+    position: absolute;
+    right: 3rem;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+  @media (max-width: 768px) {
+    .date-display {
+      display: none;
+    }
+    .nav-links a {
+      padding: 0 0.8rem;
+      font-size: 0.8rem;
+    }
   }
 
-  .tag {
-    display: inline-block;
-    padding: 0.5rem 1.2rem;
-    margin: 0.5rem;
-    border-radius: 50px;
-    font-weight: bold;
-    border: 2px solid #ff003c;
-    background: rgba(0, 0, 0, 0.6); /* Background gelap agar teks putih terbaca */
-    color: #fff;
-    box-shadow: 0 0 10px rgba(255, 0, 60, 0.3);
+  .grid-container {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
   }
 </style>
