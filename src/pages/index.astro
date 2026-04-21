@@ -1,241 +1,89 @@
 ---
-import { getCollection } from "astro:content";
-import MainLayout from "../layouts/MainLayout.astro";
-import ProjectCard from "../components/ProjectCard.astro";
-import HeroImage from "../assets/horoboy-hero.png";
-import ProfileSection from "../components/ProfileSection.astro";
+import Layout from '../layouts/MainLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 
-const allProjects = await getCollection("projects");
-const sortedProjects = allProjects.sort((a, b) => {
-  return b.data.publishDate.getTime() - a.data.publishDate.getTime();
-});
-
-const today = new Date().toLocaleDateString("en-GB");
+// Dummy data yang mencerminkan karya-karyamu
+const featuredProjects = [
+	{
+		title: "PWL_POS System",
+		description: "Sistem kasir komprehensif untuk manajemen stok dan transaksi. Dibangun dengan framework modern untuk efisiensi.",
+		tags: ["Laravel", "PHP", "Web App"],
+		imageUrl: "https://via.placeholder.com/400x300/111111/4facfe?text=POS+SYS",
+		slug: "pwl-pos"
+	},
+	{
+		title: "Lab MMT Launcher",
+		description: "Game library launcher lokal yang interaktif. Mampu mengeksekusi file game langsung dari interface web.",
+		tags: ["Astro", "Express.js", "Desktop"],
+		imageUrl: "https://via.placeholder.com/400x300/111111/ffcc00?text=LAUNCHER",
+		slug: "lab-mmt"
+	},
+	{
+		title: "Ice Queen Boss",
+		description: "Aset karakter boss 2D dengan animasi spellcasting untuk environment bersalju. Desain berfokus pada palet warna dingin.",
+		tags: ["Pixel Art", "Aseprite", "Game Asset"],
+		imageUrl: "https://via.placeholder.com/400x300/111111/ffffff?text=ICE+QUEEN",
+		slug: "ice-queen"
+	}
+];
 ---
 
-<MainLayout title="Horoboy Portfolio" isHome={true}>
-  <section class="hero">
-    <div class="hero-content">
-      <h1 class="neon-text">HOROBOY</h1>
-      <div class="hero-tags">
-        <span class="tag">Web Dev</span>
-        <span class="tag">Pixel Art</span>
-        <span class="tag">Game Dev</span>
-      </div>
-    </div>
+<Layout title="Portofolio | Pixel & Code">
+	<header class="hero">
+		<h1>> HELLO_WORLD</h1>
+		<p>Menyusun logika kode yang solid dan merangkai pixel menjadi karya visual.</p>
+	</header>
 
-    <div id="nav-sentinel"></div>
-  </section>
+	<section id="projects" class="projects-section">
+		<h2 class="section-title">FEATURED_WORK</h2>
+		
+		<div class="projects-grid">
+			{featuredProjects.map((project) => (
+				<ProjectCard 
+					title={project.title}
+					description={project.description}
+					tags={project.tags}
+					imageUrl={project.imageUrl}
+					slug={project.slug}
+				/>
+			))}
+		</div>
 
-  <nav id="main-nav" class="sticky-nav">
-    <ul class="nav-links">
-      <li><a href="/">Profile</a></li>
-      <li><a href="/artworks">Artworks</a></li>
-      <li><a href="/projects">Projects</a></li>
-    </ul>
-    <div class="date-display">{today}</div>
-  </nav>
+		<div class="view-more">
+			<button class="btn-pixel" style="background-color: #ffcc00;">LOAD_ARCHIVES.exe</button>
+		</div>
+	</section>
+</Layout>
 
-  <ProfileSection />
+<style>
+	.hero {
+		margin: 60px 0;
+		border-left: 6px solid var(--primary-color);
+		padding-left: 20px;
+	}
 
-  <section class="grid-container">
-    <div class="grid">
-      {
-        sortedProjects.map((project) => (
-          <ProjectCard
-            title={project.data.title}
-            description={project.data.description}
-            tags={project.data.tags}
-            slug={project.slug}
-          />
-        ))
-      }
-    </div>
-  </section>
-</MainLayout>
+	.hero h1 {
+		font-size: 24px;
+		color: var(--secondary-color);
+		margin-bottom: 15px;
+	}
 
-<script>
-  // Ambil elemen
-  const nav = document.getElementById('main-nav');
-  const sentinel = document.getElementById('nav-sentinel');
+	.hero p {
+		font-size: 12px;
+		max-width: 600px;
+		line-height: 2;
+	}
 
-  // Pastikan KEDUANYA ada sebelum menjalankan logika (Guard Clause)
-  if (nav && sentinel) {
-    const observer = new IntersectionObserver((entries) => {
-      // entries[0] adalah si sentinel (garis tipis)
-      if (!entries[0].isIntersecting) {
-        // Jika sentinel hilang (scroll ke bawah), aktifkan navbar
-        nav.classList.add('active');
-      } else {
-        // Jika sentinel terlihat (di atas), matikan navbar
-        nav.classList.remove('active');
-      }
-    });
+	.section-title {
+		font-size: 18px;
+		margin-bottom: 30px;
+		display: inline-block;
+		border-bottom: 4px solid var(--border-color);
+		padding-bottom: 10px;
+	}
 
-    // Mulai observasi
-    observer.observe(sentinel);
-  }
-</script>
-
-<style define:vars={{ heroImage: `url(${HeroImage.src})` }}>
-  /* --- HERO (Tetap sama) --- */
-  .hero {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: calc(-50vw + 50%);
-    overflow: hidden;
-  }
-
-  /* ... (Kode CSS Hero::before dan text kamu yang lama tetap di sini) ... */
-  .hero::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: var(--heroImage);
-    background-size: cover;
-    background-position: center;
-    image-rendering: pixelated;
-    filter: brightness(0.6) blur(0.5rem);
-    z-index: -1;
-  }
-  .hero-content {
-    text-align: center;
-    z-index: 1;
-  }
-  .neon-text {
-    font-size: 5rem;
-    color: #fff;
-    text-transform: uppercase;
-    font-weight: 900;
-    margin: 0;
-    text-shadow:
-      0 0 10px #ff003c,
-      0 0 20px #ff003c,
-      0 0 40px #ff003c;
-  }
-  .hero-tags .tag {
-    display: inline-block;
-    margin: 10px;
-    padding: 5px 15px;
-    border: 1px solid #ff003c;
-    border-radius: 20px;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-  }
-  @media (max-width: 768px) {
-    .neon-text {
-      font-size: 3rem;
-    }
-  }
-
-  /* --- LOGIKA BARU UNTUK NAVBAR --- */
-
-  /* 1. Posisi Sentinel (Penting!) */
-  #nav-sentinel {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1px; /* Sangat tipis, tak terlihat */
-    background: transparent;
-    pointer-events: none;
-  }
-
-  /* 2. Tampilan Awal Navbar (Sebelum Sticky) */
-  .sticky-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    height: 60px;
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    padding: 0 2rem;
-    box-sizing: border-box;
-
-    /* AWAL: Transparan & Tanpa Border */
-    background: rgba(
-      10,
-      10,
-      10,
-      0
-    ); /* Transparan penuh agar menyatu dengan hero */
-    border-bottom: 0px solid transparent; /* Border Hilang */
-    backdrop-filter: blur(0px); /* Blur mati dulu */
-    box-shadow: none;
-
-    /* Transisi halus saat berubah */
-    transition: all 0.4s ease-in-out;
-  }
-
-  /* 3. Tampilan Navbar SAAT STICKY (Class .active ditambahkan oleh JS) */
-  .sticky-nav.active {
-    background: rgba(10, 10, 10, 0.9); /* Jadi gelap */
-    backdrop-filter: blur(10px); /* Kaca aktif */
-
-    /* MUNCULKAN GARIS MERAH */
-    border-bottom: 2px solid #ff003c;
-    box-shadow: 0 5px 20px rgba(255, 0, 60, 0.2);
-  }
-
-  .nav-links {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .nav-links a {
-    color: #ff003c;
-    text-decoration: none;
-    padding: 0 2rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    transition: all 0.3s ease;
-    text-shadow: 0 0 5px #ff003c;
-  }
-  .nav-links a:hover {
-    color: white;
-    background: transparent;
-    transform: translateY(-2px);
-    text-shadow:
-      0 0 10px #ff003c,
-      0 0 20px #ff003c;
-  }
-  .date-display {
-    position: absolute;
-    right: 3rem;
-    color: white;
-    font-weight: bold;
-    font-size: 0.9rem;
-  }
-  @media (max-width: 768px) {
-    .date-display {
-      display: none;
-    }
-    .nav-links a {
-      padding: 0 0.8rem;
-      font-size: 0.8rem;
-    }
-  }
-
-  .grid-container {
-    padding: 4rem 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-  }
+	.view-more {
+		text-align: center;
+		margin-top: 50px;
+	}
 </style>

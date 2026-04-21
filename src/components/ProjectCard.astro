@@ -1,65 +1,96 @@
 ---
 interface Props {
-  title: string;
-  description: string;
-  tags: string[]; // Menegaskan bahwa ini adalah array
-  slug: string;
+	title: string;
+	description: string;
+	tags: string[];
+	imageUrl: string;
+	slug: string;
 }
 
-const { title, description, tags = [], slug } = Astro.props; 
-// tags = [] adalah default value agar tidak error jika datanya kosong
+const { title, description, tags, imageUrl, slug } = Astro.props;
 ---
 
-<div class="tags">
-  {tags?.map((tag) => (
-    <span class="tag-item">#{tag}</span>
-  ))}
-</div>
-
-<div class="card">
-  <h3>{title}</h3>
-  <p>{description}</p>
-  <div class="tags">
-    {tags.map((tag) => <span>#{tag} </span>)}
-  </div>
-  <a href={`/projects/${slug}`}>Lihat Detail</a>
+<div class="project-card pixel-border">
+	<div class="image-container">
+		<img src={imageUrl} alt={title} class="pixel-img" />
+	</div>
+	<div class="content">
+		<h3>{title}</h3>
+		<p>{description}</p>
+		<div class="tags">
+			{tags.map((tag) => (
+				<span class="tag">{tag}</span>
+			))}
+		</div>
+		<a href={`/projects/${slug}`} class="btn-pixel">VIEW DETAILS_</a>
+	</div>
 </div>
 
 <style>
-  .card {
-    background: white;
-    border: 1px solid #e1e1e1;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
+	.project-card {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 30px;
+		background-color: #1a1a1a;
+	}
 
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    border-color: #3b82f6; /* Warna biru saat di-hover */
-  }
+	@media (min-width: 768px) {
+		.project-card {
+			flex-direction: row;
+		}
+	}
 
-  h3 { margin-top: 0; color: #1a1a1a; }
-  p { color: #4b5563; flex-grow: 1; }
-  
-  .tags { margin-bottom: 1rem; }
-  .tag {
-    font-size: 0.75rem;
-    background: #f3f4f6;
-    color: #374151;
-    padding: 0.25rem 0.5rem;
-    border-radius: 9999px;
-    margin-right: 0.5rem;
-  }
+	.image-container {
+		flex: 1;
+		border-bottom: 4px solid #fff;
+		background-color: #333;
+		min-height: 200px;
+	}
 
-  .link {
-    color: #3b82f6;
-    text-decoration: none;
-    font-weight: 600;
-  }
+	@media (min-width: 768px) {
+		.image-container {
+			border-bottom: none;
+			border-right: 4px solid #fff;
+			max-width: 350px;
+		}
+	}
+
+	.pixel-img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		image-rendering: pixelated; /* Penting untuk estetika pixel art */
+	}
+
+	.content {
+		flex: 2;
+		padding: 20px;
+	}
+
+	h3 {
+		color: var(--primary-color);
+		font-size: 16px;
+		margin-bottom: 15px;
+	}
+
+	p {
+		font-size: 10px;
+		line-height: 1.8;
+		margin-bottom: 20px;
+		color: #ccc;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-bottom: 20px;
+	}
+
+	.tag {
+		background-color: #333;
+		border: 2px solid #666;
+		padding: 5px 8px;
+		font-size: 8px;
+	}
 </style>
