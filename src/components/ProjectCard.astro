@@ -1,96 +1,29 @@
 ---
-interface Props {
-	title: string;
-	description: string;
-	tags: string[];
-	imageUrl: string;
-	slug: string;
-}
-
-const { title, description, tags, imageUrl, slug } = Astro.props;
+const { title, description, tags, image } = Astro.props;
 ---
+<div class="bg-card-bg border border-white/5 rounded-2xl overflow-hidden hover:border-accent-purple/50 transition-all group">
+  <div class="aspect-video w-full bg-stone-800 overflow-hidden">
+    <img src={image} alt={title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+  </div>
+  <div class="p-6">
+    <h3 class="text-xl font-bold text-white mb-2">{title}</h3>
+    <p class="text-muted-text text-sm mb-4 line-clamp-2">{description}</p>
+    
+    <div class="flex flex-wrap gap-2 mb-6">
+      {tags.map((tag) => (
+        <span class="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-accent-purple/30 text-accent-purple bg-accent-purple/5">
+          {tag}
+        </span>
+      ))}
+    </div>
 
-<div class="project-card pixel-border">
-	<div class="image-container">
-		<img src={imageUrl} alt={title} class="pixel-img" />
-	</div>
-	<div class="content">
-		<h3>{title}</h3>
-		<p>{description}</p>
-		<div class="tags">
-			{tags.map((tag) => (
-				<span class="tag">{tag}</span>
-			))}
-		</div>
-		<a href={`/projects/${slug}`} class="btn-pixel">VIEW DETAILS_</a>
-	</div>
+    <div class="flex gap-3">
+      <a href="#" class="flex-1 text-center bg-accent-purple hover:bg-accent-purple/90 text-white py-2 rounded-lg text-sm font-medium transition-colors">
+        View Details
+      </a>
+      <button class="px-3 border border-white/10 rounded-lg hover:bg-white/5">
+         <span class="sr-only">Github</span>
+         </button>
+    </div>
+  </div>
 </div>
-
-<style>
-	.project-card {
-		display: flex;
-		flex-direction: column;
-		margin-bottom: 30px;
-		background-color: #1a1a1a;
-	}
-
-	@media (min-width: 768px) {
-		.project-card {
-			flex-direction: row;
-		}
-	}
-
-	.image-container {
-		flex: 1;
-		border-bottom: 4px solid #fff;
-		background-color: #333;
-		min-height: 200px;
-	}
-
-	@media (min-width: 768px) {
-		.image-container {
-			border-bottom: none;
-			border-right: 4px solid #fff;
-			max-width: 350px;
-		}
-	}
-
-	.pixel-img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		image-rendering: pixelated; /* Penting untuk estetika pixel art */
-	}
-
-	.content {
-		flex: 2;
-		padding: 20px;
-	}
-
-	h3 {
-		color: var(--primary-color);
-		font-size: 16px;
-		margin-bottom: 15px;
-	}
-
-	p {
-		font-size: 10px;
-		line-height: 1.8;
-		margin-bottom: 20px;
-		color: #ccc;
-	}
-
-	.tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
-		margin-bottom: 20px;
-	}
-
-	.tag {
-		background-color: #333;
-		border: 2px solid #666;
-		padding: 5px 8px;
-		font-size: 8px;
-	}
-</style>

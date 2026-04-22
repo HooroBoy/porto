@@ -1,126 +1,17 @@
 ---
 import '../styles/global.css'
-interface Props {
-	title: string;
-}
-
 const { title } = Astro.props;
 ---
-
-<!doctype html>
 <html lang="id">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Portfolio Developer & Pixel Artist" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-		<title>{title}</title>
-	</head>
-	<body>
-		<div class="scanlines"></div>
-		<nav class="navbar pixel-border">
-			<div class="logo">PORTFOLIO_DEV</div>
-			<div class="links">
-				<a href="/">HOME</a>
-				<a href="#projects">WORK</a>
-			</div>
-		</nav>
-		<main>
-			<slot />
-		</main>
-		<footer class="footer pixel-border">
-			<p>© 2026 - Built with Astro in Malang</p>
-		</footer>
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-stone-800 text-stone-200 font-['VT323'] text-xl p-4 md:p-8 antialiased">
+    <main class="max-w-4xl mx-auto flex flex-col gap-8">
+      <slot />
+    </main>
+  </body>
 </html>
-
-<style is:global>
-	:root {
-		--bg-color: #121212;
-		--text-color: #e0e0e0;
-		--primary-color: #ffcc00;
-		--secondary-color: #4facfe;
-		--border-color: #ffffff;
-	}
-	
-	* {
-		box-sizing: border-box;
-		margin: 0;
-		padding: 0;
-	}
-
-	body {
-		background-color: var(--bg-color);
-		color: var(--text-color);
-		font-family: 'Press Start 2P', cursive;
-		line-height: 1.6;
-		padding: 20px;
-		max-width: 1000px;
-		margin: 0 auto;
-		position: relative;
-	}
-
-	/* Efek Retro Scanlines */
-	.scanlines {
-		position: fixed;
-		top: 0; left: 0; width: 100vw; height: 100vh;
-		background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-		background-size: 100% 4px, 3px 100%;
-		pointer-events: none;
-		z-index: 50;
-	}
-
-	/* Utility Class untuk Kotak Pixel */
-	.pixel-border {
-		border: 4px solid var(--border-color);
-		box-shadow: 6px 6px 0px #000000, 6px 6px 0px 2px var(--border-color);
-		background-color: #222;
-		image-rendering: pixelated;
-	}
-
-	.navbar {
-		display: flex;
-		justify-content: space-between;
-		padding: 15px 20px;
-		margin-bottom: 40px;
-		font-size: 12px;
-	}
-
-	.navbar a {
-		color: var(--text-color);
-		text-decoration: none;
-		margin-left: 20px;
-	}
-
-	.navbar a:hover {
-		color: var(--primary-color);
-	}
-
-	.footer {
-		margin-top: 60px;
-		padding: 20px;
-		text-align: center;
-		font-size: 10px;
-	}
-
-	/* Tombol Interaktif */
-	.btn-pixel {
-		display: inline-block;
-		background-color: var(--secondary-color);
-		color: #000;
-		padding: 10px 15px;
-		text-decoration: none;
-		font-size: 10px;
-		text-transform: uppercase;
-		border: 3px solid #fff;
-		box-shadow: 4px 4px 0px #000;
-		transition: all 0.1s ease-in-out;
-		cursor: pointer;
-	}
-
-	.btn-pixel:active {
-		box-shadow: 0px 0px 0px #000;
-		transform: translate(4px, 4px);
-	}
-</style>

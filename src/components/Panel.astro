@@ -1,0 +1,13 @@
+---
+const { title } = Astro.props;
+---
+<div class="relative border-4 border-stone-500 bg-stone-700 p-6 pt-8 shadow-[6px_6px_0px_0px_rgba(0,0,0,0.5)]">
+  {title && (
+    <div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-stone-600 px-4 py-1 border-2 border-stone-500 text-stone-100 uppercase tracking-widest text-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.5)]">
+      {title}
+    </div>
+  )}
+  <div class="w-full">
+    <slot />
+  </div>
+</div>
